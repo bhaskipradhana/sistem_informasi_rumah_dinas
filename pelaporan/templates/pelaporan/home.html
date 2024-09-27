@@ -1,5 +1,152 @@
 {% extends 'pelaporan/base.html' %}
 {% block title %}Home{% endblock %}
+
 {% block content %}
-    <h1>Selamat Datang di Sistem Pelaporan Rumah Dinas</h1>
+    <style>
+        /* Full Background Styling */
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Prevent scrolling */
+        }
+
+        .home-full-background {
+            background: url('https://connect-assets.prosple.com/cdn/ff/inueXpqRfnDWB5RgjrTZ9vbot2jypOOtRvt6P5xNMO8/1630030367/public/2021-08/banner%20bank%20indonesia.jpg') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            height: 70dvh; /* Set the height to 70% of viewport */
+            margin: 0 !important;
+            padding: 0 !important;
+            border-radius: 30px; /* Rounded image */
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Center vertically */
+            margin-top: 3vh !important;
+            opacity: 0; /* Initially hidden */
+            animation: fadeIn 2s forwards; /* Fade-in animation */
+        }
+
+        /* Single Color Overlay */
+        .home-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #004F91;
+            opacity: 0.7;
+            border-radius: 30px; /* Rounded overlay */
+        }
+
+        /* Centered Content */
+        .home-content-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            z-index: 2; /* Ensure content appears above overlay */
+        }
+
+        .home-content-container h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .home-btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap; /* Allow buttons to wrap onto new lines */
+            opacity: 0; /* Initially hidden */
+            animation: slideInUp 1s forwards 0.5s; /* Slide-in animation with delay */
+        }
+
+        .home-btn-container .home-btn {
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            font-family: 'Poppins', sans-serif;
+            background-color: #004F91;
+            color: white;
+            border: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .home-btn-container .home-btn:hover {
+            background-color: #316CF4;
+            transform: translateY(-5px); /* Button "jump" effect */
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3); /* Add drop shadow */
+        }
+
+        /* Fade-in animation for image */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Slide-in from bottom animation */
+        @keyframes slideInUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Media query to adjust buttons on smaller screens */
+        @media (max-width: 768px) {
+            .home-btn-container {
+                gap: 10px; /* Reduce gap between buttons on smaller screens */
+            }
+
+            .home-btn-container .home-btn {
+                font-size: 1rem; /* Reduce button size on smaller screens */
+                padding: 8px 15px; /* Adjust padding for smaller screens */
+            }
+
+            .home-content-container h1 {
+                font-size: 2.5rem; /* Adjust header size on smaller screens */
+            }
+        }
+    </style>
+
+    <!-- Full Background with Overlay -->
+    <div class="home-full-background">
+        <div class="home-overlay"></div>
+        
+        <!-- Centered Content -->
+        <div class="home-content-container">
+            <h1>Selamat Datang di Sistem Pelaporan Rumah Dinas</h1>
+            <div class="home-btn-container">
+                <a href="{% url 'home' %}" class="home-btn">Home</a>
+                {% if user.is_authenticated %}
+                    {% if user.role == 'requester' %}
+                        <a href="{% url 'create_laporan' %}" class="home-btn">Buat Laporan</a>
+                    {% endif %}
+                    <a href="{% url 'list_laporan' %}" class="home-btn">Daftar Laporan</a>
+                    {% if user.role == 'approver' %}
+                        <a href="{% url 'jadwal_perbaikan' %}" class="home-btn">Jadwal Perbaikan</a>
+                    {% endif %}
+                    <a href="{% url 'profile' %}" class="home-btn">Profil</a>
+                    <form action="{% url 'logout' %}" method="post" style="display: inline-block;">
+                        {% csrf_token %}
+                        <button class="home-btn" type="submit">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="home-btn">Login</a>
+                    <a href="{% url 'register' %}" class="home-btn">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'pelaporan/base.html' %}
+{% block title %}Jadwal Perbaikan{% endblock %}
+{% block content %}
+<h2>Jadwal Perbaikan</h2>
+
+<form method="get">
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+<table class="table table-striped mt-4">
+    <thead class="thead-dark">
+        <tr>
+            <th>No</th>
+            <th>Alamat</th>
+            <th>Tanggal Pengerjaan</th>
+            <th>Requester</th>
+            <th>Komentar</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for laporan in laporan_list %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ laporan.alamat }}</td>
+            <td>{{ laporan.tanggal_pengerjaan|date:"d M Y" }}</td>
+            <td>{{ laporan.requester.username }}</td>
+            <td>{{ laporan.komentar }}</td>
+            <td>
+                <a href="{% url 'view_laporan' laporan.id %}" class="btn btn-info btn-sm">Lihat Detail</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" class="text-center">Tidak ada laporan pada rentang tanggal yang dipilih.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

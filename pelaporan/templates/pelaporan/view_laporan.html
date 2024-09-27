@@ -1,0 +1,36 @@
+{% extends 'pelaporan/base.html' %}
+{% block title %}Detail Laporan{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h2>Detail Laporan Kerusakan</h2>
+    </div>
+    <div class="card-body">
+        <p><strong>ID Laporan:</strong> {{ laporan.id }}</p>
+        <p><strong>Requester:</strong> {{ laporan.requester.username }}</p>
+        <p><strong>Alamat:</strong> {{ laporan.alamat }}</p>
+        <p><strong>Jenis Kerusakan:</strong> {{ laporan.get_jenis_kerusakan_display }}</p>
+        <p><strong>Tingkat Kerusakan:</strong> {{ laporan.get_tingkat_kerusakan_display }}</p>
+        <p><strong>Deskripsi:</strong> {{ laporan.deskripsi }}</p>
+        
+        {% if laporan.image %}
+            <p><strong>Gambar Kerusakan:</strong></p>
+            <img src="{{ laporan.image.url }}" alt="Gambar Kerusakan" style="max-width: 500px; max-height: 500px;">
+        {% else %}
+            <p><strong>Gambar Kerusakan:</strong> Tidak ada gambar.</p>
+        {% endif %}
+        
+        <p><strong>Status:</strong> {{ laporan.get_status_display }}</p>
+
+        {% if laporan.status == 'rejected' %}
+            <p><strong>Alasan Penolakan (Notes):</strong> {{ laporan.notes }}</p>
+        {% endif %}
+        
+        {% if laporan.status == 'approved' %}
+            <p><strong>Tanggal Pengerjaan:</strong> {{ laporan.tanggal_pengerjaan|date:"d M Y" }}</p>
+        {% endif %}
+
+        <a href="{% url 'list_laporan' %}" class="btn btn-secondary">Kembali ke Daftar Laporan</a>
+    </div>
+</div>
+{% endblock %}

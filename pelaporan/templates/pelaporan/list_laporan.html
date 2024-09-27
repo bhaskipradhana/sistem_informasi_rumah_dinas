@@ -1,0 +1,60 @@
+{% extends 'pelaporan/base.html' %}
+{% block title %}Daftar Laporan{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Daftar Laporan Kerusakan</h2>
+
+    <table class="table table-striped mt-3">
+        <thead class="thead-dark">
+            <tr>
+                <th>No</th>
+                <th>Jenis Kerusakan</th>
+                <th>Tingkat Kerusakan</th>
+                <th>Alamat</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for laporan in laporan_list %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ laporan.get_jenis_kerusakan_display }}</td>
+                <td>{{ laporan.get_tingkat_kerusakan_display }}</td>
+                <td>{{ laporan.alamat }}</td>
+
+                <!-- Status Button -->
+                <td>
+                    {% if laporan.status == 'review' %}
+                        <button class="btn btn-warning btn-ellipse btn-sm" disabled>Sedang di Review</button>
+                    {% elif laporan.status == 'rejected' %}
+                        <button class="btn btn-danger btn-ellipse btn-sm" disabled>Rejected</button>
+                    {% elif laporan.status == 'approved' %}
+                        <button class="btn btn-success btn-ellipse btn-sm" disabled>Approved</button>
+                    {% endif %}
+                </td>
+
+                <!-- Aksi Button (Lihat Detail, Approve, Reject, Update, Delete) -->
+                <td>
+                    <a href="{% url 'view_laporan' laporan.id %}" class="btn btn-info btn-sm">Lihat Detail</a>
+
+                    <!-- Tombol Approve dan Reject hanya untuk role Approver dan jika status sedang di review -->
+                    {% if laporan.status == 'review' and user.role == 'approver' %}
+                        <a href="{% url 'approve_laporan' laporan.id %}" class="btn btn-success btn-sm">Approve</a>
+                        <a href="{% url 'reject_laporan' laporan.id %}" class="btn btn-danger btn-sm">Reject</a>
+                    {% endif %}
+
+                    <!-- Tombol Update dan Delete hanya untuk role Requester dan jika status sedang di review -->
+                    {% if laporan.status == 'review' and user.role == 'requester' %}
+                        <a href="{% url 'update_laporan' laporan.id %}" class="btn btn-warning btn-sm">Update</a>
+                        <a href="{% url 'delete_laporan' laporan.id %}" class="btn btn-danger btn-sm"
+                           onclick="return confirm('Apakah Anda yakin ingin menghapus laporan ini?');">Delete</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

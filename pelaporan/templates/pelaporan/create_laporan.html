@@ -1,0 +1,60 @@
+{% extends 'pelaporan/base.html' %}
+{% load widget_tweaks %}
+{% block title %}Buat Laporan - Bank Indonesia{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow mb-5">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2>Buat Laporan Kerusakan</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Jenis Kerusakan -->
+                        <div class="form-group">
+                            <label for="jenis_kerusakan">Jenis Kerusakan</label>
+                            {{ form.jenis_kerusakan|add_class:"form-control" }}
+                        </div>
+                        
+                        <!-- Tingkat Kerusakan -->
+                        <div class="form-group">
+                            <label for="tingkat_kerusakan">Tingkat Kerusakan</label>
+                            {{ form.tingkat_kerusakan|add_class:"form-control" }}
+                        </div>
+
+                        <!-- Provinsi (Dipindahkan di atas alamat) -->
+                        <div class="form-group">
+                            <label for="provinsi">Provinsi</label>
+                            {{ form.provinsi|add_class:"form-control" }}
+                        </div>
+                        
+                        <!-- Alamat Rumah Dinas -->
+                        <div class="form-group">
+                            <label for="alamat">Alamat Rumah Dinas</label>
+                            {{ form.alamat|add_class:"form-control" }}
+                        </div>
+                        
+                        <!-- Deskripsi -->
+                        <div class="form-group">
+                            <label for="deskripsi">Deskripsi Kerusakan</label>
+                            {{ form.deskripsi|add_class:"form-control" }}
+                        </div>
+                        
+                        <!-- Gambar -->
+                        <div class="form-group">
+                            <label for="gambar">Upload Gambar Kerusakan</label>
+                            {{ form.image|add_class:"form-control-file" }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Kirim Laporan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

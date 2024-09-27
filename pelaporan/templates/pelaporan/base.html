@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bank Indonesia{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'images/logo-bi.png' %}" width="30" height="30" class="d-inline-block align-top" alt="Logo Bank Indonesia">
+            Bank Indonesia
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    {% if user.role == 'requester' %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'create_laporan' %}">Buat Laporan</a></li>
+                    {% endif %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'list_laporan' %}">Daftar Laporan</a></li>
+                    {% if user.role == 'approver' %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'jadwal_perbaikan' %}">Jadwal Perbaikan</a></li>
+                    {% endif %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Profil</a></li>
+                    <li class="nav-item">
+                        <form action="{% url 'logout' %}" method="post" class="form-inline">
+                            {% csrf_token %}
+                            <button class="btn btn-link nav-link" type="submit" style="color: inherit;">Logout</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <div class="container mt-4 mb-5">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto py-3 bg-dark text-light">
+        <div class="container text-center">
+            <span>&copy; {{ current_year }} Bank Indonesia</span>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,15 @@
+{% extends 'pelaporan/base.html' %}
+{% block title %}Konfirmasi Hapus Laporan{% endblock %}
+{% block content %}
+    <h2>Konfirmasi Hapus Laporan</h2>
+    <p>Apakah Anda yakin ingin menghapus laporan ini?</p>
+    <p><strong>ID Laporan:</strong> {{ laporan.id }}</p>
+    <p><strong>Alamat:</strong> {{ laporan.alamat }}</p>
+    <p><strong>Jenis Kerusakan:</strong> {{ laporan.get_jenis_kerusakan_display }}</p>
+    <p><strong>Tingkat Kerusakan:</strong> {{ laporan.get_tingkat_kerusakan_display }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Ya, Hapus</button>
+        <a href="{% url 'list_laporan' %}">Batal</a>
+    </form>
+{% endblock %}

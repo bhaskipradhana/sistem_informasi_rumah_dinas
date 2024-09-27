@@ -1,0 +1,17 @@
+{% extends 'pelaporan/base.html' %}
+{% block title %}Approve Laporan{% endblock %}
+{% block content %}
+    <h2>Approve Laporan</h2>
+    <p>ID Laporan: {{ laporan.id }}</p>
+    <p>Requester: {{ laporan.requester.username }}</p>
+    <p>Alamat: {{ laporan.alamat }}</p>
+    <p>Jenis Kerusakan: {{ laporan.get_jenis_kerusakan_display }}</p>
+    <p>Tingkat Kerusakan: {{ laporan.get_tingkat_kerusakan_display }}</p>
+    <p>Deskripsi: {{ laporan.deskripsi }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <label for="tanggal_pengerjaan">Tanggal Pengerjaan:</label>
+        <input type="date" name="tanggal_pengerjaan" required>
+        <button type="submit">Approve</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'pelaporan/base.html' %}
+{% block title %}Reject Laporan{% endblock %}
+{% block content %}
+    <h2>Reject Laporan</h2>
+    <p>ID Laporan: {{ laporan.id }}</p>
+    <p>Requester: {{ laporan.requester.username }}</p>
+    <p>Alamat: {{ laporan.alamat }}</p>
+    <p>Jenis Kerusakan: {{ laporan.get_jenis_kerusakan_display }}</p>
+    <p>Tingkat Kerusakan: {{ laporan.get_tingkat_kerusakan_display }}</p>
+    <p>Deskripsi: {{ laporan.deskripsi }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <label for="notes">Alasan Reject:</label><br>
+        <textarea name="notes" rows="4" cols="50" required></textarea><br>
+        <button type="submit">Reject</button>
+    </form>
+{% endblock %}

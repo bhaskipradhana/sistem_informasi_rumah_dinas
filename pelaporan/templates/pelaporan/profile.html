@@ -1,0 +1,10 @@
+{% extends 'pelaporan/base.html' %}
+{% block title %}Profil Saya{% endblock %}
+{% block content %}
+    <h2>Profil Pengguna</h2>
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Nama Lengkap:</strong> {{ user.get_full_name }}</p>
+    <p><strong>Nomor Telepon:</strong> {{ user.phone_number }}</p>
+    <!-- <p><strong>Alamat:</strong> {{ user.address }}</p> -->
+{% endblock %}

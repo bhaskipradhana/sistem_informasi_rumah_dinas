@@ -1,70 +1,136 @@
 {% extends 'pelaporan/base.html' %}
+{% load widget_tweaks %}
 {% block title %}Registrasi Pengguna{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg">
-                <div class="card-header bg-primary text-white text-center">
-                    <h3>Registrasi Pengguna</h3>
-                </div>
-                <div class="card-body">
-                    <form method="POST">
-                        {% csrf_token %}
-                        
-                        <!-- Field Nama Depan -->
-                        <div class="form-group mb-3">
-                            <label for="first_name">Nama Depan</label>
-                            {{ form.first_name }}
-                        </div>
-                        
-                        <!-- Field Nama Belakang -->
-                        <div class="form-group mb-3">
-                            <label for="last_name">Nama Belakang</label>
-                            {{ form.last_name }}
-                        </div>
+    <style>
+        /* Background color */
+        body {
+            background-color: #f5f5f5; /* Very light grey background */
+        }
 
-                        <!-- Field Username -->
-                        <div class="form-group mb-3">
-                            <label for="username">Username</label>
-                            {{ form.username }}
-                        </div>
+        /* Gradient for the header */
+        .card-header {
+            background: linear-gradient(135deg, #004F91, #316CF4); /* Gradient from #004F91 to #316CF4 */
+        }
 
-                        <!-- Field Email -->
-                        <div class="form-group mb-3">
-                            <label for="email">Email</label>
-                            {{ form.email }}
-                        </div>
+        /* Style form inputs */
+        .form-group input,
+        .form-group select {
+            font-size: 1rem;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
 
-                        <!-- Field Phone Number -->
-                        <div class="form-group mb-3">
-                            <label for="phone_number">No. Telepon</label>
-                            {{ form.phone_number }}
-                        </div>
+        /* Style for button */
+        .btn-primary {
+            background: linear-gradient(135deg, #004F91, #316CF4); /* Same gradient for button */
+            border: none;
+            font-size: 1.2rem;
+            padding: 10px 20px; /* Larger padding for the button */
+            transition: transform 0.2s ease-in-out, box-shadow 0.3s ease;
+        }
 
-                        <!-- Field Role -->
-                        <div class="form-group mb-3">
-                            <label for="role">Role</label>
-                            {{ form.role }}
-                        </div>
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #316CF4, #004F91); /* Reverse gradient on hover */
+            transform: translateY(-5px); /* Bounce effect */
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3); /* Add shadow */
+        }
 
-                        <!-- Password Fields -->
-                        <div class="form-group mb-3">
-                            <label for="password1">Password</label>
-                            {{ form.password1 }}
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="password2">Konfirmasi Password</label>
-                            {{ form.password2 }}
-                        </div>
+        /* Add margin-top for input fields and button */
+        .form-group {
+            margin-top: 1.5rem;
+        }
+    </style>
 
-                        <!-- Submit Button -->
-                        <button type="submit" class="btn btn-primary btn-block w-100">Daftar</button>
-                    </form>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg">
+                    <div class="card-header text-white text-center">
+                        <h3>Registrasi Pengguna</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+
+                            <div class="row">
+                                <!-- Field Nama Depan -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="first_name">Nama Depan</label>
+                                        {{ form.first_name|add_class:"form-control" }}
+                                    </div>
+                                </div>
+                                <!-- Field Nama Belakang -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="last_name">Nama Belakang</label>
+                                        {{ form.last_name|add_class:"form-control" }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Field Username -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="username">Username</label>
+                                        {{ form.username|add_class:"form-control" }}
+                                    </div>
+                                </div>
+                                <!-- Field Email -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        {{ form.email|add_class:"form-control" }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Field Phone Number -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="phone_number">No. Telepon</label>
+                                        {{ form.phone_number|add_class:"form-control" }}
+                                    </div>
+                                </div>
+                                <!-- Field Role -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="role">Role</label>
+                                        {{ form.role|add_class:"form-control" }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Password Field -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="password1">Password</label>
+                                        {{ form.password1|add_class:"form-control" }}
+                                    </div>
+                                </div>
+                                <!-- Confirm Password Field -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="password2">Konfirmasi Password</label>
+                                        {{ form.password2|add_class:"form-control" }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary btn-block w-100 mt-4">Daftar</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

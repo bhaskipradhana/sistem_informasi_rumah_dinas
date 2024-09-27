@@ -2,63 +2,172 @@
 {% block title %}Daftar Laporan{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2>Daftar Laporan Kerusakan</h2>
+    <style>
+        body {
+            background-color: #f5f5f5; /* Set background color */
+        }
 
-    <table class="table table-striped mt-3">
-        <thead class="thead-dark">
-            <tr>
-                <th>No</th>
-                <th>Nama Requester</th> <!-- Kolom Nama Requester -->
-                <th>Jenis Kerusakan</th>
-                <th>Tingkat Kerusakan</th>
-                <th>Alamat</th> <!-- Kolom Alamat -->
-                <th>Kota</th> <!-- Kolom Provinsi -->
-                <th>Status</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for laporan in laporan_list %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ laporan.requester.get_full_name|default:laporan.requester.username }}</td> <!-- Menampilkan Nama Requester -->
-                <td>{{ laporan.get_jenis_kerusakan_display }}</td>
-                <td>{{ laporan.get_tingkat_kerusakan_display }}</td>
-                <td>{{ laporan.alamat }}</td> <!-- Menampilkan Alamat -->
-                <td>{{ laporan.kota }}</td> <!-- Menampilkan Provinsi -->
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+            border: none;
+            opacity: 0;
+            animation: fadeInCard 1s forwards;
+        }
 
-                <!-- Status Button -->
-                <td>
-                    {% if laporan.status == 'review' %}
-                        <button class="btn btn-warning btn-ellipse btn-sm" disabled>Sedang di Review</button>
-                    {% elif laporan.status == 'rejected' %}
-                        <button class="btn btn-danger btn-ellipse btn-sm" disabled>Rejected</button>
-                    {% elif laporan.status == 'approved' %}
-                        <button class="btn btn-success btn-ellipse btn-sm" disabled>Approved</button>
-                    {% endif %}
-                </td>
+        /* Fade-in animation for the card */
+        @keyframes fadeInCard {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
 
-                <!-- Aksi Button (Lihat Detail, Approve, Reject, Update, Delete) -->
-                <td>
-                    <a href="{% url 'view_laporan' laporan.id %}" class="btn btn-info btn-sm">Lihat Detail</a>
+        /* Custom button colors */
+        .btn-blue {
+            background-color: #004F91;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-                    <!-- Tombol Approve dan Reject hanya untuk role Approver dan jika status sedang di review -->
-                    {% if laporan.status == 'review' and user.role == 'approver' %}
-                        <a href="{% url 'approve_laporan' laporan.id %}" class="btn btn-success btn-sm">Approve</a>
-                        <a href="{% url 'reject_laporan' laporan.id %}" class="btn btn-danger btn-sm">Reject</a>
-                    {% endif %}
+        .btn-green {
+            background-color: #017F01;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-                    <!-- Tombol Update dan Delete hanya untuk role Requester dan jika status sedang di review -->
-                    {% if laporan.status == 'review' and user.role == 'requester' %}
-                        <a href="{% url 'update_laporan' laporan.id %}" class="btn btn-warning btn-sm">Update</a>
-                        <a href="{% url 'delete_laporan' laporan.id %}" class="btn btn-danger btn-sm"
-                           onclick="return confirm('Apakah Anda yakin ingin menghapus laporan ini?');">Delete</a>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+        .btn-red {
+            background-color: #AF4B00;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-orange {
+            background-color: #E4AA00;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-info {
+            background-color: #316CF4;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-ellipse {
+            border-radius: 50px;
+        }
+
+        /* Hover effect: Make background white and change text color based on original button color */
+        .btn-blue:hover {
+            background-color: white;
+            color: #004F91; /* Navy color from palette */
+        }
+
+        .btn-green:hover {
+            background-color: white;
+            color: #017F01; /* Green color from palette */
+        }
+
+        .btn-red:hover {
+            background-color: white;
+            color: #AF4B00; /* Red color from palette */
+        }
+
+        .btn-orange:hover {
+            background-color: white;
+            color: #E4AA00; /* Orange color from palette */
+        }
+
+        .btn-info:hover {
+            background-color: white;
+            color: #316CF4; /* Navy blue color */
+        }
+
+    </style>
+
+    <!-- DataTable CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+    <div class="container mt-5">
+        <h2>Daftar Laporan Kerusakan</h2>
+
+        <!-- Wrapping content inside a card -->
+        <div class="card mt-3">
+            <table class="table table-striped" id="laporanTable">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Requester</th> <!-- Kolom Nama Requester -->
+                        <th>Jenis Kerusakan</th>
+                        <th>Tingkat Kerusakan</th>
+                        <th>Alamat</th> <!-- Kolom Alamat -->
+                        <th>Kota</th> <!-- Kolom Provinsi -->
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for laporan in laporan_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ laporan.requester.get_full_name|default:laporan.requester.username }}</td> <!-- Menampilkan Nama Requester -->
+                        <td>{{ laporan.get_jenis_kerusakan_display }}</td>
+                        <td>{{ laporan.get_tingkat_kerusakan_display }}</td>
+                        <td>{{ laporan.alamat }}</td> <!-- Menampilkan Alamat -->
+                        <td>{{ laporan.kota }}</td> <!-- Menampilkan Provinsi -->
+
+                        <!-- Status Button -->
+                        <td>
+                            {% if laporan.status == 'review' %}
+                                <button class="btn btn-orange btn-ellipse btn-sm" disabled>Sedang di Review</button>
+                            {% elif laporan.status == 'rejected' %}
+                                <button class="btn btn-red btn-ellipse btn-sm" disabled>Rejected</button>
+                            {% elif laporan.status == 'approved' %}
+                                <button class="btn btn-green btn-ellipse btn-sm" disabled>Approved</button>
+                            {% endif %}
+                        </td>
+
+                        <!-- Aksi Button (Lihat Detail, Approve, Reject, Update, Delete) -->
+                        <td>
+                            <a href="{% url 'view_laporan' laporan.id %}" class="btn btn-info btn-sm">Lihat Detail</a>
+
+                            <!-- Tombol Approve dan Reject hanya untuk role Approver dan jika status sedang di review -->
+                            {% if laporan.status == 'review' and user.role == 'approver' %}
+                                <a href="{% url 'approve_laporan' laporan.id %}" class="btn btn-green btn-sm">Approve</a>
+                                <a href="{% url 'reject_laporan' laporan.id %}" class="btn btn-red btn-sm">Reject</a>
+                            {% endif %}
+
+                            <!-- Tombol Update dan Delete hanya untuk role Requester dan jika status sedang di review -->
+                            {% if laporan.status == 'review' and user.role == 'requester' %}
+                                <a href="{% url 'update_laporan' laporan.id %}" class="btn btn-orange btn-sm">Update</a>
+                                <a href="{% url 'delete_laporan' laporan.id %}" class="btn btn-red btn-sm"
+                                   onclick="return confirm('Apakah Anda yakin ingin menghapus laporan ini?');">Delete</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- DataTable JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#laporanTable').DataTable(); // Initialize DataTable
+        });
+    </script>
 {% endblock %}

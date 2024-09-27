@@ -2,54 +2,162 @@
 {% block title %}Jadwal Perbaikan{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2>Jadwal Perbaikan</h2>
+    <style>
+        body {
+            background-color: #f5f5f5; /* Set background color */
+        }
 
-    <!-- Filter Tanggal -->
-    <form method="GET" class="mb-4">
-        <div class="row">
-            <div class="col-md-5">
-                <label for="start_date">Tanggal Mulai</label>
-                <input type="date" id="start_date" name="start_date" class="form-control" value="{{ request.GET.start_date }}">
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+            border: none;
+            opacity: 0;
+            animation: fadeInCard 1s forwards;
+        }
+
+        /* Fade-in animation for the card */
+        @keyframes fadeInCard {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Custom button colors */
+        .btn-blue {
+            background-color: #004F91;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-green {
+            background-color: #017F01;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-red {
+            background-color: #AF4B00;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-orange {
+            background-color: #E4AA00;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-info {
+            background-color: #316CF4;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-ellipse {
+            border-radius: 50px;
+        }
+
+        /* Hover effect: Make background white and change text color based on original button color */
+        .btn-blue:hover {
+            background-color: white;
+            color: #004F91; /* Navy color from palette */
+        }
+
+        .btn-green:hover {
+            background-color: white;
+            color: #017F01; /* Green color from palette */
+        }
+
+        .btn-red:hover {
+            background-color: white;
+            color: #AF4B00; /* Red color from palette */
+        }
+
+        .btn-orange:hover {
+            background-color: white;
+            color: #E4AA00; /* Orange color from palette */
+        }
+
+        .btn-info:hover {
+            background-color: white;
+            color: #316CF4; /* Navy blue color */
+        }
+
+    </style>
+
+    <!-- DataTable CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+    <div class="container mt-5">
+        <h2>Jadwal Perbaikan</h2>
+
+        <!-- Filter Tanggal -->
+        <form method="GET" class="mb-4">
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="start_date">Tanggal Mulai</label>
+                    <input type="date" id="start_date" name="start_date" class="form-control" value="{{ request.GET.start_date }}">
+                </div>
+                <div class="col-md-5">
+                    <label for="end_date">Tanggal Akhir</label>
+                    <input type="date" id="end_date" name="end_date" class="form-control" value="{{ request.GET.end_date }}">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
             </div>
-            <div class="col-md-5">
-                <label for="end_date">Tanggal Akhir</label>
-                <input type="date" id="end_date" name="end_date" class="form-control" value="{{ request.GET.end_date }}">
-            </div>
-            <div class="col-md-2 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary w-100">Filter</button>
-            </div>
+        </form>
+
+        <!-- Tabel Jadwal Perbaikan -->
+        <div class="card mt-3">
+            <table class="table table-striped" id="jadwalTable">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kota</th> <!-- Kolom Kota -->
+                        <th>Tanggal Pengerjaan</th> <!-- Kolom Tanggal Pengerjaan -->
+                        <th>Requester</th> <!-- Kolom Requester -->
+                        <th>Aksi</th> <!-- Kolom Aksi -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for laporan in laporan_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td> <!-- Nomor Urut -->
+                        <td>{{ laporan.kota }}</td> <!-- Menampilkan Kota -->
+                        <td>{{ laporan.tanggal_pengerjaan|date:"d M Y" }}</td> <!-- Menampilkan Tanggal Pengerjaan -->
+                        <td>{{ laporan.requester.get_full_name|default:laporan.requester.username }}</td> <!-- Nama Requester -->
+                        <td>
+                            <a href="{% url 'view_laporan' laporan.id %}" class="btn btn-info btn-sm">Lihat Detail</a> <!-- Tombol Aksi -->
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">Tidak ada data perbaikan dalam rentang tanggal yang dipilih</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-    </form>
+    </div>
 
-    <!-- Tabel Jadwal Perbaikan -->
-    <table class="table table-striped mt-3">
-        <thead class="thead-dark">
-            <tr>
-                <th>No</th>
-                <th>Kota</th> <!-- Kolom Kota -->
-                <th>Tanggal Pengerjaan</th> <!-- Kolom Tanggal Pengerjaan -->
-                <th>Requester</th> <!-- Kolom Requester -->
-                <th>Aksi</th> <!-- Kolom Aksi -->
-            </tr>
-        </thead>
-        <tbody>
-            {% for laporan in laporan_list %}
-            <tr>
-                <td>{{ forloop.counter }}</td> <!-- Nomor Urut -->
-                <td>{{ laporan.kota }}</td> <!-- Menampilkan Kota -->
-                <td>{{ laporan.tanggal_pengerjaan|date:"d M Y" }}</td> <!-- Menampilkan Tanggal Pengerjaan -->
-                <td>{{ laporan.requester.get_full_name|default:laporan.requester.username }}</td> <!-- Nama Requester -->
-                <td>
-                    <a href="{% url 'view_laporan' laporan.id %}" class="btn btn-info btn-sm">Lihat Detail</a> <!-- Tombol Aksi -->
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5" class="text-center">Tidak ada data perbaikan dalam rentang tanggal yang dipilih</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+    <!-- DataTable JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#jadwalTable').DataTable(); // Initialize DataTable
+        });
+    </script>
 {% endblock %}

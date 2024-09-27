@@ -1,17 +1,41 @@
 {% extends 'pelaporan/base.html' %}
 {% block title %}Reject Laporan{% endblock %}
+
 {% block content %}
-    <h2>Reject Laporan</h2>
-    <p>ID Laporan: {{ laporan.id }}</p>
-    <p>Requester: {{ laporan.requester.username }}</p>
-    <p>Alamat: {{ laporan.alamat }}</p>
-    <p>Jenis Kerusakan: {{ laporan.get_jenis_kerusakan_display }}</p>
-    <p>Tingkat Kerusakan: {{ laporan.get_tingkat_kerusakan_display }}</p>
-    <p>Deskripsi: {{ laporan.deskripsi }}</p>
-    <form method="post">
-        {% csrf_token %}
-        <label for="notes">Alasan Reject:</label><br>
-        <textarea name="notes" rows="4" cols="50" required></textarea><br>
-        <button type="submit">Reject</button>
-    </form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg mb-5">
+                <div class="card-header bg-danger text-white text-center">
+                    <h2>Reject Laporan</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Informasi Laporan -->
+                    <div class="mb-3">
+                        <p><strong>ID Laporan:</strong> {{ laporan.id }}</p>
+                        <p><strong>Requester:</strong> {{ laporan.requester.username }}</p>
+                        <p><strong>Alamat:</strong> {{ laporan.alamat }}</p>
+                        <p><strong>Jenis Kerusakan:</strong> {{ laporan.get_jenis_kerusakan_display }}</p>
+                        <p><strong>Tingkat Kerusakan:</strong> {{ laporan.get_tingkat_kerusakan_display }}</p>
+                        <p><strong>Deskripsi:</strong> {{ laporan.deskripsi }}</p>
+                    </div>
+
+                    <!-- Form Reject -->
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- Input Alasan Reject -->
+                        <div class="form-group mb-3">
+                            <label for="notes" class="form-label">Alasan Reject</label>
+                            <textarea name="notes" id="notes" class="form-control" rows="4" required></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-danger btn-block w-100">Reject</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

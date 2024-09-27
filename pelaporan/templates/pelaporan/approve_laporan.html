@@ -1,17 +1,41 @@
 {% extends 'pelaporan/base.html' %}
 {% block title %}Approve Laporan{% endblock %}
+
 {% block content %}
-    <h2>Approve Laporan</h2>
-    <p>ID Laporan: {{ laporan.id }}</p>
-    <p>Requester: {{ laporan.requester.username }}</p>
-    <p>Alamat: {{ laporan.alamat }}</p>
-    <p>Jenis Kerusakan: {{ laporan.get_jenis_kerusakan_display }}</p>
-    <p>Tingkat Kerusakan: {{ laporan.get_tingkat_kerusakan_display }}</p>
-    <p>Deskripsi: {{ laporan.deskripsi }}</p>
-    <form method="post">
-        {% csrf_token %}
-        <label for="tanggal_pengerjaan">Tanggal Pengerjaan:</label>
-        <input type="date" name="tanggal_pengerjaan" required>
-        <button type="submit">Approve</button>
-    </form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg mb-5">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2>Approve Laporan</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Informasi Laporan -->
+                    <div class="mb-3">
+                        <p><strong>ID Laporan:</strong> {{ laporan.id }}</p>
+                        <p><strong>Requester:</strong> {{ laporan.requester.username }}</p>
+                        <p><strong>Alamat:</strong> {{ laporan.alamat }}</p>
+                        <p><strong>Jenis Kerusakan:</strong> {{ laporan.get_jenis_kerusakan_display }}</p>
+                        <p><strong>Tingkat Kerusakan:</strong> {{ laporan.get_tingkat_kerusakan_display }}</p>
+                        <p><strong>Deskripsi:</strong> {{ laporan.deskripsi }}</p>
+                    </div>
+
+                    <!-- Form Approve -->
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Input Tanggal Pengerjaan -->
+                        <div class="form-group mb-3">
+                            <label for="tanggal_pengerjaan" class="form-label">Tanggal Pengerjaan</label>
+                            <input type="date" name="tanggal_pengerjaan" id="tanggal_pengerjaan" class="form-control" required>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-success btn-block w-100">Approve</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

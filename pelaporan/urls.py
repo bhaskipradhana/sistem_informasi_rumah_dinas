@@ -15,4 +15,5 @@ urlpatterns = [
     path('laporan/view/<int:pk>/', views.view_laporan, name='view_laporan'),
     path('laporan/delete/<int:pk>/', views.delete_laporan, name='delete_laporan'),
     path('approver/jadwal-perbaikan/', views.jadwal_perbaikan, name='jadwal_perbaikan'),
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
 ]

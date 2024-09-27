@@ -1,43 +1,66 @@
 {% extends 'pelaporan/base.html' %}
-{% load widget_tweaks %}
-{% block title %}Register - Bank Indonesia{% endblock %}
+{% block title %}Registrasi Pengguna{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card shadow">
+            <div class="card shadow-lg">
                 <div class="card-header bg-primary text-white text-center">
-                    <h2>Register</h2>
+                    <h3>Registrasi Pengguna</h3>
                 </div>
                 <div class="card-body">
-                    <form method="post">
+                    <form method="POST">
                         {% csrf_token %}
-                        <div class="form-group">
+                        
+                        <!-- Field Nama Depan -->
+                        <div class="form-group mb-3">
+                            <label for="first_name">Nama Depan</label>
+                            {{ form.first_name }}
+                        </div>
+                        
+                        <!-- Field Nama Belakang -->
+                        <div class="form-group mb-3">
+                            <label for="last_name">Nama Belakang</label>
+                            {{ form.last_name }}
+                        </div>
+
+                        <!-- Field Username -->
+                        <div class="form-group mb-3">
                             <label for="username">Username</label>
-                            {{ form.username|add_class:"form-control" }}
+                            {{ form.username }}
                         </div>
-                        <div class="form-group">
+
+                        <!-- Field Email -->
+                        <div class="form-group mb-3">
                             <label for="email">Email</label>
-                            {{ form.email|add_class:"form-control" }}
+                            {{ form.email }}
                         </div>
-                        <div class="form-group">
-                            <label for="phone_number">Nomor Telepon</label>
-                            {{ form.phone_number|add_class:"form-control" }}
+
+                        <!-- Field Phone Number -->
+                        <div class="form-group mb-3">
+                            <label for="phone_number">No. Telepon</label>
+                            {{ form.phone_number }}
                         </div>
-                        <div class="form-group">
+
+                        <!-- Field Role -->
+                        <div class="form-group mb-3">
                             <label for="role">Role</label>
-                            {{ form.role|add_class:"form-control" }}
+                            {{ form.role }}
                         </div>
-                        <div class="form-group">
+
+                        <!-- Password Fields -->
+                        <div class="form-group mb-3">
                             <label for="password1">Password</label>
-                            {{ form.password1|add_class:"form-control" }}
+                            {{ form.password1 }}
                         </div>
-                        <div class="form-group">
-                            <label for="password2">Confirm Password</label>
-                            {{ form.password2|add_class:"form-control" }}
+                        <div class="form-group mb-3">
+                            <label for="password2">Konfirmasi Password</label>
+                            {{ form.password2 }}
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block">Daftar</button>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary btn-block w-100">Daftar</button>
                     </form>
                 </div>
             </div>

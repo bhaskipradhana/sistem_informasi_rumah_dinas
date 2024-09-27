@@ -1,10 +1,73 @@
 {% extends 'pelaporan/base.html' %}
-{% block title %}Profil Saya{% endblock %}
+{% load static %}
+{% block title %}Profil Pengguna - Bank Indonesia{% endblock %}
+
 {% block content %}
-    <h2>Profil Pengguna</h2>
-    <p><strong>Username:</strong> {{ user.username }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>Nama Lengkap:</strong> {{ user.get_full_name }}</p>
-    <p><strong>Nomor Telepon:</strong> {{ user.phone_number }}</p>
-    <!-- <p><strong>Alamat:</strong> {{ user.address }}</p> -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow mb-5">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2>Profil Pengguna</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>Nama:</strong>
+                        </div>
+                        <div class="col-md-8">
+                            {{ user.get_full_name|default:user.username }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>Email:</strong>
+                        </div>
+                        <div class="col-md-8">
+                            {{ user.email }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>Username:</strong>
+                        </div>
+                        <div class="col-md-8">
+                            {{ user.username }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>No. Telepon:</strong>
+                        </div>
+                        <div class="col-md-8">
+                            {{ user.phone_number }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>Role:</strong>
+                        </div>
+                        <div class="col-md-8">
+                            {% if user.role == 'requester' %}
+                                Pemilik Rumah Dinas
+                            {% elif user.role == 'approver' %}
+                                Tim Unit Manajemen Intern
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Tambahkan tombol Edit Profil di sini -->
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <a href="{% url 'edit_profile' %}" class="btn btn-primary mt-3">Edit Profil</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

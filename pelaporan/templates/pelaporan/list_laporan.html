@@ -9,9 +9,11 @@
         <thead class="thead-dark">
             <tr>
                 <th>No</th>
+                <th>Nama Requester</th> <!-- Kolom Nama Requester -->
                 <th>Jenis Kerusakan</th>
                 <th>Tingkat Kerusakan</th>
-                <th>Alamat</th>
+                <th>Alamat</th> <!-- Kolom Alamat -->
+                <th>Kota</th> <!-- Kolom Provinsi -->
                 <th>Status</th>
                 <th>Aksi</th>
             </tr>
@@ -20,9 +22,11 @@
             {% for laporan in laporan_list %}
             <tr>
                 <td>{{ forloop.counter }}</td>
+                <td>{{ laporan.requester.get_full_name|default:laporan.requester.username }}</td> <!-- Menampilkan Nama Requester -->
                 <td>{{ laporan.get_jenis_kerusakan_display }}</td>
                 <td>{{ laporan.get_tingkat_kerusakan_display }}</td>
-                <td>{{ laporan.alamat }}</td>
+                <td>{{ laporan.alamat }}</td> <!-- Menampilkan Alamat -->
+                <td>{{ laporan.kota }}</td> <!-- Menampilkan Provinsi -->
 
                 <!-- Status Button -->
                 <td>

@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegisterForm, LaporanForm
+from .forms import UserRegisterForm, LaporanForm, UserProfileForm
 from .models import LaporanKerusakan
 from django.contrib import messages
 from django import forms
@@ -186,3 +186,18 @@ def jadwal_perbaikan(request):
         form = DateRangeForm()
 
     return render(request, 'pelaporan/jadwal_perbaikan.html', {'form': form, 'laporan_list': laporan_list})
+
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        user_form = UserProfileForm(request.POST, instance=request.user)
+        if user_form.is_valid():
+            user_form.save()
+            return redirect('profile')  # Redirect ke halaman profil setelah update
+    else:
+        user_form = UserProfileForm(instance=request.user)
+
+    return render(request, 'pelaporan/edit_profile.html', {
+        'user_form': user_form
+    })

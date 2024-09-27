@@ -2,19 +2,22 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import User, LaporanKerusakan
 
+# Form untuk pendaftaran user baru (Register)
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    phone_number = forms.CharField(required=True)
+    first_name = forms.CharField(max_length=30, required=True, label="Nama Depan")
+    last_name = forms.CharField(max_length=30, required=True, label="Nama Belakang")
+    phone_number = forms.CharField(required=True, label="No. Telepon")
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'phone_number', 'password1', 'password2', 'role']
+        fields = ['username', 'first_name', 'last_name', 'email', 'phone_number', 'password1', 'password2', 'role']
 
 # Form untuk mengajukan laporan kerusakan
 class LaporanForm(forms.ModelForm):
     class Meta:
         model = LaporanKerusakan
-        fields = ['alamat', 'jenis_kerusakan', 'tingkat_kerusakan', 'deskripsi','provinsi','image']
+        fields = ['alamat', 'jenis_kerusakan', 'tingkat_kerusakan', 'deskripsi', 'kota', 'image']
 
     def clean_image(self):
         image = self.cleaned_data.get('image', False)
@@ -31,17 +34,17 @@ class LaporanForm(forms.ModelForm):
         self.fields['jenis_kerusakan'].label = "Jenis Kerusakan"
         self.fields['tingkat_kerusakan'].label = "Tingkat Kerusakan"
         self.fields['deskripsi'].label = "Deskripsi Kerusakan"
-        self.fields['provinsi'].widget.attrs.update({'class': 'form-control'})
+        self.fields['kota'].widget.attrs.update({'class': 'form-control'})
         self.fields['image'].label = "Unggah Gambar Kerusakan"
 
-class DateRangeForm(forms.Form):
-    start_date = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'}),
-        label='Tanggal Mulai',
-        required=False
-    )
-    end_date = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'}),
-        label='Tanggal Akhir',
-        required=False
-    )
+
+# Form untuk Edit Profil (Update profil pengguna)
+class UserProfileForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    phone_number = forms.CharField(max_length=15, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'phone_number']

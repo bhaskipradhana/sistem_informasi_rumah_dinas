@@ -1,36 +1,89 @@
 {% extends 'pelaporan/base.html' %}
 {% block title %}Detail Laporan{% endblock %}
+
 {% block content %}
-<div class="card">
-    <div class="card-header bg-primary text-white">
-        <h2>Detail Laporan Kerusakan</h2>
-    </div>
-    <div class="card-body">
-        <p><strong>ID Laporan:</strong> {{ laporan.id }}</p>
-        <p><strong>Requester:</strong> {{ laporan.requester.username }}</p>
-        <p><strong>Alamat:</strong> {{ laporan.alamat }}</p>
-        <p><strong>Jenis Kerusakan:</strong> {{ laporan.get_jenis_kerusakan_display }}</p>
-        <p><strong>Tingkat Kerusakan:</strong> {{ laporan.get_tingkat_kerusakan_display }}</p>
-        <p><strong>Deskripsi:</strong> {{ laporan.deskripsi }}</p>
-        
-        {% if laporan.image %}
-            <p><strong>Gambar Kerusakan:</strong></p>
-            <img src="{{ laporan.image.url }}" alt="Gambar Kerusakan" style="max-width: 500px; max-height: 500px;">
-        {% else %}
-            <p><strong>Gambar Kerusakan:</strong> Tidak ada gambar.</p>
-        {% endif %}
-        
-        <p><strong>Status:</strong> {{ laporan.get_status_display }}</p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow mb-5">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2>Detail Laporan Kerusakan</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>ID Laporan:</strong></div>
+                        <div class="col-md-8">{{ laporan.id }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>Requester:</strong></div>
+                        <div class="col-md-8">{{ laporan.requester.username }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>Alamat:</strong></div>
+                        <div class="col-md-8">{{ laporan.alamat }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>Jenis Kerusakan:</strong></div>
+                        <div class="col-md-8">{{ laporan.get_jenis_kerusakan_display }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>Tingkat Kerusakan:</strong></div>
+                        <div class="col-md-8">{{ laporan.get_tingkat_kerusakan_display }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>Deskripsi:</strong></div>
+                        <div class="col-md-8">{{ laporan.deskripsi }}</div>
+                    </div>
 
-        {% if laporan.status == 'rejected' %}
-            <p><strong>Alasan Penolakan (Notes):</strong> {{ laporan.notes }}</p>
-        {% endif %}
-        
-        {% if laporan.status == 'approved' %}
-            <p><strong>Tanggal Pengerjaan:</strong> {{ laporan.tanggal_pengerjaan|date:"d M Y" }}</p>
-        {% endif %}
+                    <!-- Gambar Kerusakan -->
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>Gambar Kerusakan:</strong></div>
+                        <div class="col-md-8">
+                            {% if laporan.image %}
+                                <img src="{{ laporan.image.url }}" alt="Gambar Kerusakan" class="img-fluid img-thumbnail" style="max-width: 100%; height: auto;">
+                            {% else %}
+                                <span class="text-muted">Tidak ada gambar.</span>
+                            {% endif %}
+                        </div>
+                    </div>
 
-        <a href="{% url 'list_laporan' %}" class="btn btn-secondary">Kembali ke Daftar Laporan</a>
+                    <!-- Status Laporan -->
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>Status:</strong></div>
+                        <div class="col-md-8">
+                            {% if laporan.status == 'review' %}
+                                <span class="badge bg-warning text-white">{{ laporan.get_status_display }}</span>
+                            {% elif laporan.status == 'rejected' %}
+                                <span class="badge bg-danger text-white">{{ laporan.get_status_display }}</span>
+                            {% elif laporan.status == 'approved' %}
+                                <span class="badge bg-success text-white">{{ laporan.get_status_display }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Alasan Penolakan (Jika Ditolak) -->
+                    {% if laporan.status == 'rejected' %}
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Alasan Penolakan (Notes):</strong></div>
+                            <div class="col-md-8">{{ laporan.notes }}</div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Tanggal Pengerjaan (Jika Disetujui) -->
+                    {% if laporan.status == 'approved' %}
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Tanggal Pengerjaan:</strong></div>
+                            <div class="col-md-8">{{ laporan.tanggal_pengerjaan|date:"d M Y" }}</div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Tombol Kembali -->
+                    <div class="text-center mt-4">
+                        <a href="{% url 'list_laporan' %}" class="btn btn-secondary">Kembali ke Daftar Laporan</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

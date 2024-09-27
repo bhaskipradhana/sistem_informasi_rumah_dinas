@@ -1,41 +1,55 @@
 {% extends 'pelaporan/base.html' %}
 {% block title %}Jadwal Perbaikan{% endblock %}
+
 {% block content %}
-<h2>Jadwal Perbaikan</h2>
+<div class="container mt-5">
+    <h2>Jadwal Perbaikan</h2>
 
-<form method="get">
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Filter</button>
-</form>
+    <!-- Filter Tanggal -->
+    <form method="GET" class="mb-4">
+        <div class="row">
+            <div class="col-md-5">
+                <label for="start_date">Tanggal Mulai</label>
+                <input type="date" id="start_date" name="start_date" class="form-control" value="{{ request.GET.start_date }}">
+            </div>
+            <div class="col-md-5">
+                <label for="end_date">Tanggal Akhir</label>
+                <input type="date" id="end_date" name="end_date" class="form-control" value="{{ request.GET.end_date }}">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            </div>
+        </div>
+    </form>
 
-<table class="table table-striped mt-4">
-    <thead class="thead-dark">
-        <tr>
-            <th>No</th>
-            <th>Alamat</th>
-            <th>Tanggal Pengerjaan</th>
-            <th>Requester</th>
-            <th>Komentar</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for laporan in laporan_list %}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ laporan.alamat }}</td>
-            <td>{{ laporan.tanggal_pengerjaan|date:"d M Y" }}</td>
-            <td>{{ laporan.requester.username }}</td>
-            <td>{{ laporan.komentar }}</td>
-            <td>
-                <a href="{% url 'view_laporan' laporan.id %}" class="btn btn-info btn-sm">Lihat Detail</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="6" class="text-center">Tidak ada laporan pada rentang tanggal yang dipilih.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <!-- Tabel Jadwal Perbaikan -->
+    <table class="table table-striped mt-3">
+        <thead class="thead-dark">
+            <tr>
+                <th>No</th>
+                <th>Kota</th> <!-- Kolom Kota -->
+                <th>Tanggal Pengerjaan</th> <!-- Kolom Tanggal Pengerjaan -->
+                <th>Requester</th> <!-- Kolom Requester -->
+                <th>Aksi</th> <!-- Kolom Aksi -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for laporan in laporan_list %}
+            <tr>
+                <td>{{ forloop.counter }}</td> <!-- Nomor Urut -->
+                <td>{{ laporan.kota }}</td> <!-- Menampilkan Kota -->
+                <td>{{ laporan.tanggal_pengerjaan|date:"d M Y" }}</td> <!-- Menampilkan Tanggal Pengerjaan -->
+                <td>{{ laporan.requester.get_full_name|default:laporan.requester.username }}</td> <!-- Nama Requester -->
+                <td>
+                    <a href="{% url 'view_laporan' laporan.id %}" class="btn btn-info btn-sm">Lihat Detail</a> <!-- Tombol Aksi -->
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">Tidak ada data perbaikan dalam rentang tanggal yang dipilih</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

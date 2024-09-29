@@ -3,68 +3,119 @@
 {% block title %}Update Laporan - Bank Indonesia{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow mb-5">
-                <div class="card-header bg-primary text-white text-center">
-                    <h2>Update Laporan Kerusakan</h2>
-                </div>
-                <div class="card-body">
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        
-                        <!-- Jenis Kerusakan -->
-                        <div class="form-group">
-                            <label for="jenis_kerusakan">Jenis Kerusakan</label>
-                            {{ form.jenis_kerusakan|add_class:"form-control" }}
-                        </div>
-                        
-                        <!-- Tingkat Kerusakan -->
-                        <div class="form-group">
-                            <label for="tingkat_kerusakan">Tingkat Kerusakan</label>
-                            {{ form.tingkat_kerusakan|add_class:"form-control" }}
-                        </div>
+    <style>
+        /* Background color */
+        body {
+            background-color: #f5f5f5; /* Very light grey background */
+        }
 
-                        <!-- Provinsi (ditempatkan di atas alamat) -->
-                        <div class="form-group">
-                            <label for="kota">Kota Kantor Perwakilan BI</label>
-                            {{ form.kota|add_class:"form-control" }}
-                        </div>
+        /* Gradient for the header */
+        .card-header {
+            background: linear-gradient(135deg, #004F91, #316CF4); /* Gradient from #004F91 to #316CF4 */
+        }
 
-                        <!-- Alamat Rumah Dinas -->
-                        <div class="form-group">
-                            <label for="alamat">Alamat Rumah Dinas</label>
-                            {{ form.alamat|add_class:"form-control" }}
-                        </div>
-                        
-                        <!-- Deskripsi -->
-                        <div class="form-group">
-                            <label for="deskripsi">Deskripsi Kerusakan</label>
-                            {{ form.deskripsi|add_class:"form-control" }}
-                        </div>
-                        
-                        <!-- Gambar -->
-                        <div class="form-group">
-                            <label for="gambar">Upload Gambar Kerusakan</label>
-                            {{ form.image|add_class:"form-control-file" }}
-                            
-                            <!-- Preview Gambar jika sudah di-upload -->
-                            {% if laporan.image %}
-                                <div class="mt-3">
-                                    <label>Preview Gambar:</label>
-                                    <div class="d-flex justify-content-start">
-                                        <img src="{{ laporan.image.url }}" alt="Gambar Kerusakan" class="img-thumbnail" style="max-width: 200px; height: auto;">
-                                    </div>
+        /* Style form inputs */
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            font-size: 1rem;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        /* Style for button */
+        .btn-primary {
+            background: linear-gradient(135deg, #004F91, #316CF4); /* Same gradient for button */
+            border: none;
+            font-size: 1.2rem;
+            padding: 10px 20px; /* Larger padding for the button */
+            transition: transform 0.2s ease-in-out, box-shadow 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #316CF4, #004F91); /* Reverse gradient on hover */
+            transform: translateY(-5px); /* Bounce effect */
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3); /* Add shadow */
+        }
+
+        /* Add margin-top for input fields and button */
+        .form-group {
+            margin-top: 1.5rem;
+        }
+
+        /* Adjust textarea height */
+        textarea.form-control {
+            height: 120px; /* Custom height for textarea */
+        }
+
+        /* Adjust form control file input */
+        .form-control-file {
+            padding: 10px;
+        }
+    </style>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow mb-5">
+                    <div class="card-header text-white text-center">
+                        <h3>Update Laporan Kerusakan</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            <!-- Row 1: Jenis Kerusakan, Tingkat Kerusakan, Kota -->
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <label for="jenis_kerusakan">Jenis Kerusakan</label>
+                                    {{ form.jenis_kerusakan|add_class:"form-control" }}
                                 </div>
-                            {% endif %}
-                        </div>
+                                <div class="col-md-4 form-group">
+                                    <label for="tingkat_kerusakan">Tingkat Kerusakan</label>
+                                    {{ form.tingkat_kerusakan|add_class:"form-control" }}
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label for="kota">Kota Kantor Perwakilan BI</label>
+                                    {{ form.kota|add_class:"form-control" }}
+                                </div>
+                            </div>
 
-                        <button type="submit" class="btn btn-primary btn-block">Update Laporan</button>
-                    </form>
+                            <!-- Row 2: Alamat Rumah Dinas -->
+                            <div class="form-group">
+                                <label for="alamat">Alamat Rumah Dinas</label>
+                                {{ form.alamat|add_class:"form-control" }}
+                            </div>
+
+                            <!-- Row 3: Deskripsi -->
+                            <div class="form-group">
+                                <label for="deskripsi">Deskripsi Kerusakan</label>
+                                {{ form.deskripsi|add_class:"form-control" }}
+                            </div>
+
+                            <!-- Row 4: Gambar -->
+                            <div class="form-group">
+                                <label for="gambar">Upload Gambar Kerusakan</label>
+                                {{ form.image|add_class:"form-control-file" }}
+                                
+                                <!-- Preview Gambar jika sudah di-upload -->
+                                {% if laporan.image %}
+                                    <div class="mt-3">
+                                        <label>Preview Gambar:</label>
+                                        <div class="d-flex justify-content-start">
+                                            <img src="{{ laporan.image.url }}" alt="Gambar Kerusakan" class="img-thumbnail" style="max-width: 200px; height: auto;">
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-primary btn-block w-100 mt-4">Update Laporan</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

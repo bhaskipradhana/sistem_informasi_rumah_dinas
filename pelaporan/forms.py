@@ -18,10 +18,10 @@ class LaporanForm(forms.ModelForm):
     class Meta:
         model = LaporanKerusakan
         fields = ['alamat', 'jenis_kerusakan', 'tingkat_kerusakan', 'deskripsi', 'kota', 'image']
-
+    
     def clean_image(self):
         image = self.cleaned_data.get('image', False)
-        if image:
+        if image and hasattr(image, 'content_type'):
             if image.size > 4 * 1024 * 1024:
                 raise forms.ValidationError("Ukuran file terlalu besar (maksimal 4MB).")
             if not image.content_type in ["image/jpeg", "image/png"]:
